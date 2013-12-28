@@ -6,6 +6,7 @@
  */
 #include <iostream>
 #include <sstream>
+#include <Wt/WContainerWidget>
 #include "Path.h"
 
 #ifndef QUESTION_H_
@@ -36,6 +37,7 @@ public:
 	virtual std::string get_string(int spacing) const;
 	virtual std::string get_asking_string() const;
 	virtual std::string get_ok_string(bool ok, int level=0) const;
+	virtual Wt::WContainerWidget* getWidget() const;
 
 	virtual void set_answers(std::string * answers, int amount);
 

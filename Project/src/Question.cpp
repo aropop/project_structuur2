@@ -7,6 +7,10 @@
 
 #include "Question.h"
 #include <iostream>
+#include <Wt/WLineEdit>
+#include <Wt/WText>
+#include <Wt/WContainerWidget>
+#include <Wt/WBreak>
 
 //Constructor meestal gebruikt voor type
 Question::Question(Path id, std::string& question) :
@@ -132,4 +136,14 @@ std::string Question::get_ok_string(bool ok, int level) const {
 	ss << " " << question_string << std::endl;
 	return ss.str();
 }
+
+Wt::WContainerWidget* Question::getWidget() const {
+	Wt::WContainerWidget* ret(new Wt::WContainerWidget());
+	ret->addWidget(new Wt::WText(question_string));
+	ret->addWidget(new Wt::WBreak());
+	Wt::WLineEdit* id = new Wt::WLineEdit(ret);
+	id->setObjectName("answer");
+	return ret;
+}
+
 

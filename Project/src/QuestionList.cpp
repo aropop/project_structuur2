@@ -15,7 +15,7 @@
 #include <fstream>
 #include <uuid/uuid.h>
 
-QuestionList::QuestionList(std::string& filename) :
+QuestionList::QuestionList(const std::string& filename) :
 		filename_(filename) {
 	//ifstream opbouwen
 	std::ifstream input_file(filename_.c_str());
@@ -693,4 +693,7 @@ std::string QuestionList::getUuidString() {
 	uuid_unparse(uuid_, c_uuid);
 	return uuid_to_string(c_uuid);
 }
+
+
+
 

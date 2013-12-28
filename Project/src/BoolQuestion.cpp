@@ -7,6 +7,9 @@
 
 #include "BoolQuestion.h"
 #include <sstream>
+#include <Wt/WRadioButton>
+#include <Wt/WButtonGroup>
+#include <Wt/WBreak>
 
 BoolQuestion::BoolQuestion() :
 		Question() {
@@ -40,4 +43,17 @@ bool BoolQuestion::accepts_answer(std::string& answer) const {
 std::string BoolQuestion::get_question_file_string(){
 	return get_string();
 }
+
+Wt::WContainerWidget* BoolQuestion::getWidget() const {
+	Wt::WContainerWidget* ret (new Wt::WContainerWidget());
+	Wt::WButtonGroup *group = new Wt::WButtonGroup(ret);
+	group->setObjectName("answer");
+	ret->addWidget(new Wt::WText(question_string));
+	new Wt::WBreak(ret);
+	group->addButton(new Wt::WRadioButton("Ja", ret), 1);
+	new Wt::WBreak(ret);
+	group->addButton(new Wt::WRadioButton("Nee", ret), 0);
+	return ret;
+}
+
 

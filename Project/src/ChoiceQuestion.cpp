@@ -7,6 +7,9 @@
 
 #include "ChoiceQuestion.h"
 #include <stdlib.h>
+#include <Wt/WRadioButton>
+#include <Wt/WButtonGroup>
+#include <Wt/WBreak>
 
 ChoiceQuestion::ChoiceQuestion(Path id, std::string& question,
 		std::string * answers, int amount_of_answers) :
@@ -94,3 +97,18 @@ std::string ChoiceQuestion::get_string() const {
 	return file_stringstream.str();
 
 }
+
+Wt::WContainerWidget* ChoiceQuestion::getWidget() const {
+	Wt::WContainerWidget* ret (new Wt::WContainerWidget());
+	Wt::WButtonGroup *group = new Wt::WButtonGroup(ret);
+	group->setObjectName("answer");
+	ret->addWidget(new Wt::WText(question_string));
+	new Wt::WBreak(ret);
+	for(int i = 0; i < amount_of_answers_; i++){
+		group->addButton(new Wt::WRadioButton(answers_[i], ret), i);
+		new Wt::WBreak(ret);
+	}
+	return ret;
+
+}
+

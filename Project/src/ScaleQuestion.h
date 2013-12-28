@@ -20,6 +20,7 @@ public:
 	int getMax() const;
 	std::string get_question_file_string() const;
 	std::string get_asking_string() const;
+	Wt::WContainerWidget* getWidget() const;
 
 	bool accepts_answer(std::string & a) const;
 

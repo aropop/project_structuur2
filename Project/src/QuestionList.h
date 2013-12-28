@@ -14,7 +14,7 @@
 
 class QuestionList {
 public:
-	QuestionList(std::string& filename);
+	QuestionList(const std::string& filename);
 	QuestionList();
 	~QuestionList();
 
@@ -51,6 +51,7 @@ public:
 	void ungroup(Path& p);
 
 	Question* getQuestion(Path& p);
+
 
 	//hulp
 	bool dirty;

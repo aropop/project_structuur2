@@ -9,6 +9,7 @@
 #include "QuestionList.h"
 #include "Question.h"
 
+
 Group::Group() {
 	type_ = GROUP;
 

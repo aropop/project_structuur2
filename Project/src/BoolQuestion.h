@@ -19,6 +19,8 @@ public:
 	bool accepts_answer(std::string& answer) const;
 	std::string get_string();
 	std::string get_question_file_string();
+	Wt::WContainerWidget* getWidget() const;
+
 };
 
 #endif /* BOOLQUESTION_H_ */

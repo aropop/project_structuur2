@@ -8,7 +8,10 @@
 #include "QuestionList.h"
 #include "Parser.h"
 #include "Path.h"
+#include "WebApplication.h"
 #include <iostream>
+#include <Wt/WApplication>
+#include "dirent.h"
 
 void print_help(std::ostream& out) {
 	out << "Welkom bij de enquête tool." << std::endl
@@ -17,19 +20,44 @@ void print_help(std::ostream& out) {
 			<< "list, test, add, insert, group, ungroup, remove en edit." << std::endl;
 }
 
-int main(int argc, char * args[]) {
+Wt::WApplication *createApplication(const Wt::WEnvironment& env)
+{
 
-	if (argc == 2) {
-		std::string fn(args[1]); //bestandsnaam nemen
-		QuestionList ql = QuestionList(fn);
-		Parser pa(&std::cin, &std::cout, &ql);
-	} else if (argc == 3) {
-		std::string quest_fn(args[1]);
-		std::string ans_fn(args[2]);
-		QuestionList ql = QuestionList(quest_fn);
-		Parser pa(&std::cin, &std::cout, &ql, ans_fn);
+	return new WebApplication(env);
+}
+
+void debug(){
+	DIR *dir;
+	struct dirent *ent;
+	if ((dir = opendir ("./src/")) != NULL) {
+	  /* print all the files and directories within directory */
+	  while ((ent = readdir (dir)) != NULL) {
+		std::string fname(ent->d_name);
+		if(fname.substr(fname.length() - 3, fname.length()).compare("ens") == 0){
+			//Wt::WAnchor* anch(new Wt::WAnchor());
+			//anch->setText(fname.substr(0, fname.length() - 3));
+			//root()->addWidget(anch);
+			std::cout << fname;
+		}
+	  }
+	  closedir (dir);
 	} else {
-		print_help(std::cout);
+	  /* could not open directory */
+	  //root()->addWidget(new Wt::WText("Interne fout"));
+		std::cout << "fout";
 	}
-	return 0;
+}
+
+
+
+int main(int argc, char * args[]) {
+	//debug();
+	const char *custom_argv[] = {
+				"hello",
+				"--docroot=/usr/share/Wt",
+				"--http-address=127.0.0.1",
+				"--http-port=8080"
+		};
+	return WRun(4, (char **)(custom_argv), &createApplication);
+
 }
