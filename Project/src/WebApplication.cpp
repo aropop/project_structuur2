@@ -11,11 +11,17 @@
 #include <Wt/WEnvironment>
 #include <Wt/WPushButton>
 #include <Wt/WWidget>
+#include <Wt/WButtonGroup>
+#include <Wt/WLineEdit>
+#include <Wt/WRadioButton>
+#include <Wt/WSlider>
 #include <vector>
+#include <iostream>
 #include "dirent.h"
 #include "WebApplication.h"
 #include "QuestionList.h"
 #include "Question.h"
+#include "AnswerSet.h"
 
 #define _TITLE_ "Enquete"
 #define _BR_() root()->addWidget(new Wt::WBreak())
@@ -25,8 +31,7 @@
 WebApplication::WebApplication(const Wt::WEnvironment& env) :
 		WApplication(env), mode_(HOME) {
 	setTitle(_TITLE_);
-	WApplication::instance()->internalPathChanged().connect(this,
-			&WebApplication::dispatch_pages);
+	WApplication::instance()->internalPathChanged().connect(boost::bind(&WebApplication::dispatch_pages, this));
 	dispatch_pages();
 }
 
@@ -35,15 +40,19 @@ WebApplication::~WebApplication() {
 }
 
 void WebApplication::startSurvey(const std::string& filename) {
-	current_ql_ = QuestionList(std::string("src/").append(filename));
-	_d_(filename);
+	std::string full_filename = std::string("src/").append(filename);
+	current_ql_ = QuestionList(full_filename);
 	for(QuestionList::QLiterator it = *(current_ql_.begin()); it != current_ql_.end(); ++it){
-		_add_widget_((**it).getWidget());
+		Question* q (*it);
+		_d_(q->getId().toString());
+		Wt::WContainerWidget* w (q->getWidget());
+		_add_widget_(w);
 		_BR_();
 	}
 	Wt::WPushButton* submit (new Wt::WPushButton("Ingeven!", root()));
-	submit->clicked().connect(this, &WebApplication::submitSurvey);
+	submit->clicked().connect(boost::bind(&WebApplication::submitSurvey, this));
 	_add_widget_(submit);
+	survey_name_ = filename.substr(0, filename.length() - 4);
 }
 
 void WebApplication::showSurveys() {
@@ -77,18 +86,47 @@ void WebApplication::showSurveys() {
 }
 
 void WebApplication::submitSurvey() {
-	AnswerSet answerset();
+	AnswerSet answerset(&current_ql_);
 	std::vector<Wt::WWidget*> question_conts(root()->children());
+	//fill the answerset with the answers
 	for(std::vector<Wt::WWidget*>::iterator it = question_conts.begin(); it != question_conts.end(); it++){
 		Wt::WContainerWidget* wc(static_cast<Wt::WContainerWidget*>(*it));
-		Wt::WObject obj (wc->find("answer"));
+		Wt::WWidget* obj (wc->find("answer"));
 		Wt::WLineEdit* le(dynamic_cast<Wt::WLineEdit*>(obj));
+		std::stringstream ss_path(static_cast<Wt::WText*>(wc->find("path"))->text().toUTF8());
+		Path current_path;
+		ss_path >> current_path;
 		if(le != NULL){
-			std::string answer(le->text());
-
+			std::string answer_str = le->text().toUTF8();
+			Answer answer_obj (answer_str, current_path);
+			answerset.add(answer_obj);
 		}else{
-
+			Wt::WButtonGroup* bg (dynamic_cast<Wt::WButtonGroup*>(obj));
+			if(bg != NULL){
+				Wt::WRadioButton* rb (bg->checkedButton());
+				std::string ans_str(rb->valueText().toUTF8());
+				Answer a_o(ans_str, current_path);
+				answerset.add(a_o);
+			}else{
+				Wt::WSlider* ws(dynamic_cast<Wt::WSlider*>(obj));
+				if(ws != NULL){
+					std::string ans_str(ws->valueText().toUTF8());
+					Answer a_o(ans_str, current_path);
+					answerset.add(a_o);
+				}else{
+					throw std::string("Error: unknown type of Wwidget");
+				}
+			}
 		}
+	}
+	std::string session_id (sessionId());
+	if(answerset.fully_answered()){
+		answerset.write_to_file(survey_name_.append(session_id).append(".ena"), current_ql_.getUuidString());
+		surveys_done_.push_back(survey_name_.append(".ens"));
+	}else{
+		Wt::WText* fill_in(new Wt::WText("Vul alle verplichte velden volledig in!"));
+		fill_in->setAttributeValue("style", "color:red");
+		root()->insertWidget(1, fill_in);
 	}
 }
 

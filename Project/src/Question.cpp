@@ -141,8 +141,12 @@ Wt::WContainerWidget* Question::getWidget() const {
 	Wt::WContainerWidget* ret(new Wt::WContainerWidget());
 	ret->addWidget(new Wt::WText(question_string));
 	ret->addWidget(new Wt::WBreak());
-	Wt::WLineEdit* id = new Wt::WLineEdit(ret);
-	id->setObjectName("answer");
+	//Wt::WText* hidden = new Wt::WText(id_.toString());
+	//hidden->setObjectName("path");
+	//ret->addWidget(hidden);
+	//hidden->hide();
+	//Wt::WLineEdit* id = new Wt::WLineEdit(ret);
+	//id->setObjectName("answer");
 	return ret;
 }
 

@@ -9,6 +9,7 @@
 #define WEBAPPLICATION_H_
 
 #include <Wt/WApplication>
+#include "QuestionList.h"
 
 
 class WebApplication: public Wt::WApplication {
@@ -24,6 +25,7 @@ private:
 	Pages mode_;
 	QuestionList current_ql_;
 	std::vector<std::string> surveys_done_;
+	std::string survey_name_;
 
 	void startSurvey(const std::string& filename);
 	void submitSurvey();

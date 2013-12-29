@@ -11,7 +11,7 @@
 #define ANSWER_H_
 class Answer {
 public:
-	Answer(std::string& answer, Path& p) :
+	Answer(const std::string& answer, const Path& p) :
 			path(p), answer_(answer) {
 
 	}

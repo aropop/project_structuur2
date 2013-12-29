@@ -108,6 +108,10 @@ Wt::WContainerWidget* ChoiceQuestion::getWidget() const {
 		group->addButton(new Wt::WRadioButton(answers_[i], ret), i);
 		new Wt::WBreak(ret);
 	}
+	Wt::WText* hidden = new Wt::WText(id_.toString());
+	hidden->hide();
+	hidden->setObjectName("path");
+	ret->addWidget(hidden);
 	return ret;
 
 }

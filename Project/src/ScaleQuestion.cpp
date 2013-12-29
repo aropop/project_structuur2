@@ -66,6 +66,10 @@ Wt::WContainerWidget* ScaleQuestion::getWidget() const {
 	box->setMaximum(max_);
 	box->setTickInterval(1);
 	box->setTickPosition(Wt::WSlider::TicksBothSides);
+	Wt::WText* hidden = new Wt::WText(id_.toString());
+	hidden->hide();
+	hidden->setObjectName("path");
+	ret->addWidget(hidden);
 	return ret;
 }
 

@@ -53,6 +53,10 @@ Wt::WContainerWidget* BoolQuestion::getWidget() const {
 	group->addButton(new Wt::WRadioButton("Ja", ret), 1);
 	new Wt::WBreak(ret);
 	group->addButton(new Wt::WRadioButton("Nee", ret), 0);
+	Wt::WText* hidden = new Wt::WText(id_.toString());
+	hidden->hide();
+	hidden->setObjectName("path");
+	ret->addWidget(hidden);
 	return ret;
 }
 
