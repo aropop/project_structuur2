@@ -14,7 +14,7 @@
 
 //Constructor meestal gebruikt voor type
 Question::Question(Path id, std::string& question) :
-		question_string(question), id_(id), type_(TEXT) {
+		question_string(question), id_(id), type_(TEXT), optional_(false) {
 
 }
 
@@ -139,7 +139,10 @@ std::string Question::get_ok_string(bool ok, int level) const {
 
 Wt::WContainerWidget* Question::getWidget() const {
 	Wt::WContainerWidget* ret(new Wt::WContainerWidget());
-	ret->addWidget(new Wt::WText(question_string));
+	std::string question_string_opt(question_string);
+	if(!optional_)
+		question_string_opt = question_string_opt.append("*");
+	ret->addWidget(new Wt::WText(question_string_opt));
 	ret->addWidget(new Wt::WBreak());
 	Wt::WText* hidden = new Wt::WText(id_.toString());
 	hidden->setObjectName("path");

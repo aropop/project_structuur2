@@ -107,7 +107,7 @@ private:
 
 	//hulp
 	void read_from_file(std::ifstream * input_file);
-
+	void checkOpt(Question* q);
 };
 
 std::string uuid_to_string(char * character_array);

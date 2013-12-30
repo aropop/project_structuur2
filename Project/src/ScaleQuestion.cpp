@@ -58,7 +58,10 @@ bool ScaleQuestion::accepts_answer(std::string& a) const {
 
 Wt::WContainerWidget* ScaleQuestion::getWidget() const {
 	Wt::WContainerWidget* ret (new Wt::WContainerWidget());
-	ret->addWidget(new Wt::WText(question_string));
+	std::string question_string_opt(question_string);
+	if(!optional_)
+		question_string_opt = question_string_opt.append("*");
+	ret->addWidget(new Wt::WText(question_string_opt));
 	new Wt::WBreak(ret);
 	Wt::WSlider *box = new Wt::WSlider(ret);
 	box->setObjectName("answer");

@@ -100,7 +100,7 @@ void QuestionList::save() {
 	char uuid_str[36];
 	uuid_unparse(uuid_, uuid_str);
 	//header wegschrijven
-	output_file << "VERSION 2" << std::endl << "ID " << uuid_to_string(uuid_str)
+	output_file << "VERSION 3" << std::endl << "ID " << uuid_to_string(uuid_str)
 			<< std::endl << "STEPS " << deepAmountOfQuestions() << std::endl;
 	save(output_file);
 	//ql is niet meer dirty want is juist weggeschreven
@@ -256,6 +256,7 @@ void QuestionList::read_from_file(std::ifstream * input_file) {
 					ChoiceQuestion * current_question = new ChoiceQuestion(
 							question_number, question_string, answers,
 							amount_of_answers);
+					checkOpt(current_question);
 					add(current_question, question_number);
 					//scope zal de current_question destructen maar we hebben ze gekopieerd naar het geheugen
 					current_question->copied = true;
@@ -268,7 +269,7 @@ void QuestionList::read_from_file(std::ifstream * input_file) {
 							question_string);
 
 					add(current_question, question_number);
-
+					checkOpt(current_question);
 					ss.clear();
 
 				} else if (question_type.compare(
@@ -278,6 +279,7 @@ void QuestionList::read_from_file(std::ifstream * input_file) {
 					Question* current_question = new BoolQuestion(
 							question_number, question_string);
 					add(current_question, question_number);
+					checkOpt(current_question);
 					ss.clear();
 
 				} else if (question_type.compare(
@@ -290,6 +292,7 @@ void QuestionList::read_from_file(std::ifstream * input_file) {
 					Question* current_question = new ScaleQuestion(
 							question_number, question_string, min, max);
 					add(current_question, question_number);
+					checkOpt(current_question);
 					ss.clear();
 				} else if (question_type.compare(
 						Question::get_type_string(Question::GROUP)) == 0) {
@@ -299,6 +302,7 @@ void QuestionList::read_from_file(std::ifstream * input_file) {
 					getline(ss, question_string);
 					Question * current_question = new Group(question_number,
 							question_string);
+					checkOpt(current_question);
 					add(current_question, question_number);
 					ss.clear();
 					counter--; //moet niet opgehoogd worden wanneer je een group leest
@@ -317,6 +321,17 @@ void QuestionList::read_from_file(std::ifstream * input_file) {
 		throw std::string("Corrupt file");
 	}
 
+}
+
+void QuestionList::checkOpt(Question* q) {
+	std::string question_string(q->question_string);
+	if (question_string.length() > 3)
+		if (question_string.substr(question_string.length() - 4,
+				question_string.length()).compare("#opt") == 0) {
+			q->setOptional(true);
+			q->question_string = q->question_string.substr(0,
+					question_string.length() - 4);
+		}
 }
 
 Path QuestionList::add(Question::QuestionType type,

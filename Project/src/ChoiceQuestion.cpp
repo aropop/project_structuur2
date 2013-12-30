@@ -101,8 +101,12 @@ std::string ChoiceQuestion::get_string() const {
 Wt::WContainerWidget* ChoiceQuestion::getWidget() const {
 	Wt::WContainerWidget* ret (new Wt::WContainerWidget());
 	Wt::WButtonGroup *group = new Wt::WButtonGroup(ret);
-	ret->addWidget(new Wt::WText(question_string));
+	std::string question_string_opt(question_string);
+	if(!optional_)
+		question_string_opt = question_string_opt.append("*");
+	ret->addWidget(new Wt::WText(question_string_opt));
 	new Wt::WBreak(ret);
+	//dummy so that CHOICE and BOOL question are compatible, can't ever be checked
 	Wt::WRadioButton* dummy (new Wt::WRadioButton("", ret));
 	dummy->setObjectName("answer0");
 	dummy->hide();

@@ -48,7 +48,11 @@ Wt::WContainerWidget* BoolQuestion::getWidget() const {
 	Wt::WContainerWidget* ret (new Wt::WContainerWidget());
 	Wt::WButtonGroup *group = new Wt::WButtonGroup(ret);
 
-	ret->addWidget(new Wt::WText(question_string));
+	std::string question_string_opt(question_string);
+	if(!optional_)
+		question_string_opt = question_string_opt.append("*");
+
+	ret->addWidget(new Wt::WText(question_string_opt));
 	new Wt::WBreak(ret);
 
 	Wt::WRadioButton* yes (new Wt::WRadioButton("Ja", ret));

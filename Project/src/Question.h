@@ -48,6 +48,14 @@ public:
 	virtual Path increase_id(int level = 0);
 	virtual Path decrease_id(int level = 0);
 
+	bool isOptional() const {
+		return optional_;
+	}
+
+	void setOptional(bool optional) {
+		optional_ = optional;
+	}
+
 	Path getId() const {
 		return id_;
 	}
@@ -67,6 +75,7 @@ public:
 protected:
 	Path id_;
 	QuestionType type_;
+	bool optional_;
 
 
 };

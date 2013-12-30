@@ -23,7 +23,8 @@ AnswerSet::~AnswerSet() {
 
 }
 
-void AnswerSet::write_to_file(const std::string& file, const std::string& uuid) {
+void AnswerSet::write_to_file(const std::string& file,
+		const std::string& uuid) {
 	std::fstream file_stream(file.c_str(), std::fstream::out);
 	file_stream << "ID " << uuid << std::endl;
 	int count(1);
@@ -43,12 +44,12 @@ void AnswerSet::add(Answer& a) {
 			bool inserted(false);
 			for (std::vector<Answer>::iterator it = vect_.begin();
 					it != vect_.end(); it++) {
-				if((*it).path == a.path){ //replacen
+				if ((*it).path == a.path) { //replacen
 					it = vect_.erase(it);
 					it = vect_.insert(it, a);
 					inserted = true;
 					return;
-				}else if (!((*it).path < a.path)) {
+				} else if (!((*it).path < a.path)) {
 					vect_.insert(it, a);
 					inserted = true;
 					return;
@@ -83,7 +84,7 @@ void AnswerSet::list(std::ostream& out) {
 				if (check_group_answered(quest, ans_it)) {
 					out
 							<< ql_->getQuestion(p)->get_ok_string(true,
-									(q_it.getPath().length() - j)  - 1);
+									(q_it.getPath().length() - j) - 1);
 				} else {
 					out
 							<< ql_->getQuestion(p)->get_ok_string(false,
@@ -142,15 +143,23 @@ bool AnswerSet::check_group_answered(Question* group,
 bool AnswerSet::fully_answered() {
 	std::vector<Answer>::iterator ans_it = vect_.begin();
 	QuestionList::QLiterator q_it = *(ql_->begin());
-	while(q_it != ql_->end()){
-		if(ans_it == vect_.end() || !((*ans_it).path == q_it.getPath())){
-			return false;
-		}else{
-			++q_it;
-			++ans_it;
+	while (q_it != ql_->end()) {
+		if ((**q_it).isOptional()) {
+			if((*ans_it).path == q_it.getPath()){
+				++q_it;
+				++ans_it;
+			}else{
+				++q_it;
+			}
+		} else {
+			if (ans_it == vect_.end() || !((*ans_it).path == q_it.getPath())) {
+				return false;
+			} else {
+				++q_it;
+				++ans_it;
+			}
 		}
 	}
 	return true;
 }
-
 

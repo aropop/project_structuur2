@@ -19,6 +19,8 @@ Group::Group(Path& id, std::string& theme_string, Question* question1,
 		Question* question2) :
 		Question(id, theme_string) {
 	ql_.setCurrentPath(id_);
+	question1->setOptional(optional_);
+	question2->setOptional(optional_);
 	ql_.add(question1);
 	ql_.add(question2);
 	type_ = GROUP;
@@ -55,6 +57,7 @@ std::string Group::get_string() const {
 }
 
 Path Group::add(Question* question, Path& local_path) {
+	question->setOptional(optional_);
 	return id_.cons(ql_.add(question, local_path));
 }
 
