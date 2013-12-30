@@ -141,8 +141,9 @@ std::string QuestionList::get_question_string(Path& index) const {
 void QuestionList::edit(Path& question_number,
 		std::string& new_question_string) {
 	if (question_number.length() > 1) {
-		dynamic_cast<Group*>(questions_.at(question_number.pop_front_number() - 1))->edit(
-				question_number, new_question_string);
+		dynamic_cast<Group*>(questions_.at(
+				question_number.pop_front_number() - 1))->edit(question_number,
+				new_question_string);
 	} else {
 		questions_.at(question_number.peek_number() - 1)->set_question_string(
 				new_question_string);
@@ -154,12 +155,12 @@ void QuestionList::edit(Path& question_number,
 void QuestionList::edit_choice(Path& question_number, std::string* new_answers,
 		int amount) {
 	if (question_number.length() > 1) {
-		Path copy (question_number);
+		Path copy(question_number);
 		dynamic_cast<Group*>(questions_.at(copy.pop_front_number() - 1))->edit_choice(
 				copy, new_answers, amount);
 	} else {
-		questions_.at(question_number.peek_number() -1)->set_answers(new_answers,
-				amount);
+		questions_.at(question_number.peek_number() - 1)->set_answers(
+				new_answers, amount);
 		dirty = true;
 	}
 }
@@ -183,9 +184,11 @@ void QuestionList::delete_question(Path& question_number) {
 	} else {
 		//avoid memory leaks
 		delete questions_.at(question_number.peek_number() - 1);
-		questions_.erase(questions_.begin() + question_number.peek_number() - 1);
+		questions_.erase(
+				questions_.begin() + question_number.peek_number() - 1);
 		for (std::vector<Question*>::iterator it = questions_.begin()
-				+ question_number.peek_front() - 1; it != questions_.end(); it++) {
+				+ question_number.peek_front() - 1; it != questions_.end();
+				it++) {
 			(**it).decrease_id(current_path_.length());
 		}
 	}
@@ -198,7 +201,8 @@ void QuestionList::read_from_file(std::ifstream * input_file) {
 	getline(*input_file, current_line);
 	//bekijk de versie
 	if (current_line.compare("VERSION 2") == 0
-			|| current_line.compare("VERSION 1") == 0) {
+			|| current_line.compare("VERSION 1") == 0
+			|| current_line.compare("VERSION 3") == 0) {
 		getline(*input_file, current_line);
 		ss.clear();
 		ss.str(current_line);
@@ -427,7 +431,7 @@ void QuestionList::group(Path& question1, Path& question2,
 		Group * grp;
 		Path group_path(question1);
 		Path r(current_path_.cons(group_path));
-		if ((unsigned)question2.peek_number() > questions_.size()) {
+		if ((unsigned) question2.peek_number() > questions_.size()) {
 			throw std::string(
 					"Je probeert te groupen op een vraag niet binnen het bereik!");
 		} else {
@@ -693,7 +697,4 @@ std::string QuestionList::getUuidString() {
 	uuid_unparse(uuid_, c_uuid);
 	return uuid_to_string(c_uuid);
 }
-
-
-
 

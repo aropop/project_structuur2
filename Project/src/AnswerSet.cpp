@@ -49,7 +49,7 @@ void AnswerSet::add(Answer& a) {
 					inserted = true;
 					return;
 				}else if (!((*it).path < a.path)) {
-					vect_.insert(it - 1, a);
+					vect_.insert(it, a);
 					inserted = true;
 					return;
 				}

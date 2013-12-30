@@ -112,7 +112,7 @@ std::istream& operator>>(std::istream& in, Path &p) {
 	}
 	bool last(false); //true is a number, false is a dot
 	int keep(0);
-	while ((cur != ' ') && (cur != '\n') && !in.eof()  ) {
+	while ((cur != ' ') && (cur != '\n') && !in.eof()) {
 		if (last) {
 			if (cur == '.') { //skip and jump to next
 				p.push_number(keep);
@@ -120,11 +120,11 @@ std::istream& operator>>(std::istream& in, Path &p) {
 				cur = in.get();
 				last = false;
 			} else {
-				if(isdigit(cur)){
+				if (isdigit(cur)) {
 					keep = (10 * keep) + (cur - 48);
 					cur = in.get();
-				}else{
-				throw std::string("Invallid path");
+				} else {
+					throw std::string("Invallid path");
 				}
 			}
 		} else {
@@ -153,7 +153,9 @@ bool operator <(const Path& p1, const Path& p2) {
 	std::vector<int>::const_iterator it2(p2.numbers_.begin());
 	for (std::vector<int>::const_iterator it = p1.numbers_.begin();
 			it != p1.numbers_.end(); it++) {
-		if(*it > *it2){
+		if (it2 == p2.numbers_.end()) {
+			return true;
+		} else if (*it > *it2) {
 			return false;
 		}
 		it2++;

@@ -67,9 +67,10 @@ Wt::WContainerWidget* ScaleQuestion::getWidget() const {
 	box->setTickInterval(1);
 	box->setTickPosition(Wt::WSlider::TicksBothSides);
 	Wt::WText* hidden = new Wt::WText(id_.toString());
-	hidden->hide();
 	hidden->setObjectName("path");
 	ret->addWidget(hidden);
+	hidden->hide();
+	ret->addWidget(new Wt::WBreak());
 	return ret;
 }
 

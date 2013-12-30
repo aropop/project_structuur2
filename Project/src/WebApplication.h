@@ -23,9 +23,10 @@ private:
 	};
 
 	Pages mode_;
-	QuestionList current_ql_;
+	QuestionList* current_ql_;
 	std::vector<std::string> surveys_done_;
 	std::string survey_name_;
+	bool error_shown_;
 
 	void startSurvey(const std::string& filename);
 	void submitSurvey();

@@ -101,17 +101,25 @@ std::string ChoiceQuestion::get_string() const {
 Wt::WContainerWidget* ChoiceQuestion::getWidget() const {
 	Wt::WContainerWidget* ret (new Wt::WContainerWidget());
 	Wt::WButtonGroup *group = new Wt::WButtonGroup(ret);
-	group->setObjectName("answer");
 	ret->addWidget(new Wt::WText(question_string));
 	new Wt::WBreak(ret);
+	Wt::WRadioButton* dummy (new Wt::WRadioButton("", ret));
+	dummy->setObjectName("answer0");
+	dummy->hide();
+	dummy->setChecked(false);
 	for(int i = 0; i < amount_of_answers_; i++){
-		group->addButton(new Wt::WRadioButton(answers_[i], ret), i);
+		Wt::WRadioButton* choice (new Wt::WRadioButton(answers_[i], ret));
+		std::stringstream ss;
+		ss << i+1;
+		choice->setObjectName(std::string("answer").append(ss.str()));
+		group->addButton(choice, i+1);
 		new Wt::WBreak(ret);
 	}
 	Wt::WText* hidden = new Wt::WText(id_.toString());
 	hidden->hide();
 	hidden->setObjectName("path");
 	ret->addWidget(hidden);
+	ret->addWidget(new Wt::WBreak());
 	return ret;
 
 }
