@@ -44,6 +44,7 @@ public:
 	void delete_pointer(Path& path);
 
 	void save();
+	void save(const std::string& fn);
 	void save(std::ostream& out) const;
 
 	void group(Path& question1, Path& question2, std::string& theme_string);

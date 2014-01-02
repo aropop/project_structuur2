@@ -27,10 +27,15 @@ void AnswerSet::write_to_file(const std::string& file,
 		const std::string& uuid) {
 	std::fstream file_stream(file.c_str(), std::fstream::out);
 	file_stream << "ID " << uuid << std::endl;
-	int count(1);
+	QuestionList::QLiterator q_it = *(ql_->begin());
 	for (std::vector<Answer>::iterator it = vect_.begin(); it != vect_.end();
 			it++) {
-		file_stream << count++ << " " << (*it).getAnswer() << std::endl;
+		while(!(q_it.getPath() == (*it).path) && (**q_it).isOptional()){
+			file_stream << q_it.getPath() << " " << "null" << std::endl;
+			++q_it;
+		}
+		file_stream << q_it.getPath() << " " << (*it).getAnswer() << std::endl;
+		++q_it;
 	}
 	file_stream.close();
 }
@@ -162,4 +167,6 @@ bool AnswerSet::fully_answered() {
 	}
 	return true;
 }
+
+
 

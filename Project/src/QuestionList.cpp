@@ -93,10 +93,14 @@ std::string uuid_to_string(char * character_array) {
 	return uuid_string;
 }
 
+void QuestionList::save(){
+	save(filename_);
+}
+
 //save commando
-void QuestionList::save() {
+void QuestionList::save(const std::string& filename) {
 	//output file openen
-	std::fstream output_file(filename_.c_str(), std::ofstream::out);
+	std::fstream output_file(filename.c_str(), std::ofstream::out);
 	char uuid_str[36];
 	uuid_unparse(uuid_, uuid_str);
 	//header wegschrijven

@@ -28,6 +28,8 @@ public:
 
 	bool fully_answered();
 
+	void to_json(std::stringstream& ss);
+
 
 private:
 	std::vector<Answer> vect_;
