@@ -36,6 +36,7 @@ AdminApplication::AdminApplication(const Wt::WEnvironment& env) :
 }
 
 void AdminApplication::dispatch_pages() {
+	root()->clear();
 	std::string path(internalPath());
 
 	root()->addWidget(new Wt::WText("Welkom op het admin paneel!"));
