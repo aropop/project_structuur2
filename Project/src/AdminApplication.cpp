@@ -181,6 +181,7 @@ Wt::WFileResource* AdminApplication::json_answers(
 					getline(file, line); //ignore first line
 					getline(file, line);
 					while (!file.eof()) {
+						ss.clear();
 						ss.str(line);
 						ss >> path;
 						ss >> line;
@@ -233,7 +234,8 @@ Wt::WPushButton* AdminApplication::upload_button() {
 	upload->changed().connect(upload, &Wt::WFileUpload::upload);
 	upload->changed().connect(uploadButton, &Wt::WPushButton::disable);
 
-	upload->uploaded().connect(boost::bind(&AdminApplication::fileUploaded, this, upload));
+	upload->uploaded().connect(
+			boost::bind(&AdminApplication::fileUploaded, this, upload));
 
 	upload->fileTooLarge().connect(this, &AdminApplication::tooLarge);
 	return uploadButton;
@@ -241,25 +243,31 @@ Wt::WPushButton* AdminApplication::upload_button() {
 
 void AdminApplication::fileUploaded(Wt::WFileUpload* fu) {
 	std::string filename(fu->uploadedFiles().at(0).spoolFileName());
-	try{
-		QuestionList test (filename);
-		Wt::WLineEdit* survey_line_edit (static_cast<Wt::WLineEdit*>(root()->find("survey_name")));
-		test.save(std::string("src/").append(std::string(survey_line_edit->text().toUTF8())).append(".ens"));
-		dispatch_pages();
-
-	}catch(std::string& e){
-		Wt::WDialog* dialog(new Wt::WDialog("Niet geldig bestand"));
-		Wt::WPushButton* no(new Wt::WPushButton("Sluiten"));
-		dialog->contents()->addWidget(no);
-		no->clicked().connect(
-				boost::bind(&AdminApplication::remove_dialog, this, dialog));
-		dialog->exec();
+	try {
+		std::string survey_name;
+		QuestionList test(filename);
+		Wt::WLineEdit* survey_line_edit(
+				static_cast<Wt::WLineEdit*>(root()->find("survey_name")));
+		survey_name = survey_line_edit->text().toUTF8();
+		if (survey_name.empty()) {
+			makeDialog("Geef een naam voor je enquête", "Sluiten");
+		} else {
+			test.save(std::string("src/").append(survey_name).append(".ens"));
+			dispatch_pages();
+		}
+	} catch (std::string& e) {
+		makeDialog("Niet geldig bestand", "Sluiten");
 	}
 }
 
-void AdminApplication::tooLarge(){
-	Wt::WDialog* dialog(new Wt::WDialog("Bestand te groot"));
-	Wt::WPushButton* no(new Wt::WPushButton("Sluiten"));
+void AdminApplication::tooLarge() {
+	makeDialog("Bestand te groot", "Sluiten");
+}
+
+void AdminApplication::makeDialog(const std::string& text,
+		const std::string& close) {
+	Wt::WDialog* dialog(new Wt::WDialog(text));
+	Wt::WPushButton* no(new Wt::WPushButton(close));
 	no->clicked().connect(
 			boost::bind(&AdminApplication::remove_dialog, this, dialog));
 	dialog->contents()->addWidget(no);

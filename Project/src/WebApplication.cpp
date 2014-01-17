@@ -164,13 +164,8 @@ void WebApplication::submitSurvey() {
 						".ena"), current_ql_->getUuidString());
 		surveys_done_.push_back(survey_name_);
 		delete current_ql_;
-		root()->clear();
-		_add_widget_(new Wt::WText("Antwoorden goed ontvangen!"));
-		_BR_();
-		_add_widget_(
-				new Wt::WAnchor(Wt::WLink(Wt::WLink::InternalPath, "/ss/"), "Ga verder.", root()));
-		WApplication::instance()->internalPathChanged().connect(this,
-				&WebApplication::dispatch_pages);
+		setInternalPath("/ss/", true);
+		dispatch_pages();
 		error_shown_ = false;
 	} else {
 		if (!error_shown_) {

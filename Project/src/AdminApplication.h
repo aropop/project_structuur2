@@ -27,6 +27,7 @@ private:
 	Wt::WPushButton* upload_button();
 	void fileUploaded(Wt::WFileUpload* fu);
 	void tooLarge();
+	void makeDialog(const std::string& text, const std::string& close);
 };
 
 #endif /* ADMINAPPLICATION_H_ */
